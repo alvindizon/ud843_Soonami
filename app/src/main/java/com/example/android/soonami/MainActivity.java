@@ -18,6 +18,7 @@ package com.example.android.soonami;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** URL to query the USGS dataset for earthquake information */
     private static final String USGS_REQUEST_URL =
-            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2012-01-01&endtime=2012-12-01&minmagnitude=6";
+            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=2014-12-01&minmagnitude=7";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 // TODO Handle the IOException
             }
+
+
 
             // Extract relevant fields from the JSON response and create an {@link Event} object
             Event earthquake = extractFeatureFromJson(jsonResponse);
@@ -209,6 +212,12 @@ public class MainActivity extends AppCompatActivity {
          * about the first earthquake from the input earthquakeJSON string.
          */
         private Event extractFeatureFromJson(String earthquakeJSON) {
+            // return if input is empty or null
+            // TextUtils.isEmpty is equivalent to if(string == null && string.isEmpty())
+            if(TextUtils.isEmpty(earthquakeJSON)) {
+                return null;
+            }
+
             try {
                 JSONObject baseJsonResponse = new JSONObject(earthquakeJSON);
                 JSONArray featureArray = baseJsonResponse.getJSONArray("features");
